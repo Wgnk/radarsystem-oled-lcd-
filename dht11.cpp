@@ -3,22 +3,16 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <Fonts/FreeMonoBold18pt7b.h>
-
 #include "DHT.h"
 #define DHTPIN A0
-#define DHTTYPE DHT11   // DHT 11
+#define DHTTYPE DHT11   
 DHT dht(DHTPIN, DHTTYPE);
-
 int h;
 int t;
-
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
-
-// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-#define OLED_RESET     4 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_WIDTH 128 
+#define SCREEN_HEIGHT 64 
+#define OLED_RESET     4 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-
 #define bitmap_height   128
 #define bitmap_width    64
 static const unsigned char PROGMEM logo_bmp[] =
@@ -87,22 +81,17 @@ static const unsigned char PROGMEM logo_bmp[] =
   0x00, 0x1F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   0x00, 0x03, 0xE0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
-
 void setup() {
   Serial.begin(9600);
   dht.begin();
-
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { 
     Serial.println(F("SSD1306 allocation failed"));
-    for (;;); // Don't proceed, loop forever
+    for (;;);
   }
-  // Clear the buffer
   display.clearDisplay();
   printText();
   delay(1500);
 }
-
 void loop() {
   h = dht.readHumidity();
   t = dht.readTemperature();
@@ -116,11 +105,10 @@ void loop() {
   delay(500);
   display.clearDisplay();
 }
-
 void printText() {
   display.setFont(&FreeMonoBold18pt7b);
-  display.setTextColor(WHITE);        // Draw white text
-  display.setCursor(45, 28);            // Start at top-left corner
+  display.setTextColor(WHITE);      
+  display.setCursor(45, 28);         
   display.print(t);
   display.drawCircle(92, 8, 3, WHITE);
   display.setCursor(100, 27);
@@ -128,10 +116,7 @@ void printText() {
   display.setCursor(45, 62);
   display.print(h);
   display.print("%");
-
 }
-
 void showBitmap(void) {
   display.drawBitmap(0, 0, logo_bmp, bitmap_height, bitmap_width, WHITE);
-  //display.display();
 }
